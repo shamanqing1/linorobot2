@@ -65,7 +65,7 @@ def generate_launch_description():
 
         DeclareLaunchArgument(
             name='base_serial_port', 
-            default_value='/dev/ttyACM0',
+            default_value='/dev/ttyUSB0',
             description='Linorobot Base Serial Port'
         ),
 
@@ -98,6 +98,11 @@ def generate_launch_description():
             launch_arguments={
                 'base_serial_port': LaunchConfiguration("base_serial_port")
             }.items()
+        ),
+
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(joy_launch_path),
+            condition=IfCondition(LaunchConfiguration("joy")),
         ),
 
         IncludeLaunchDescription(

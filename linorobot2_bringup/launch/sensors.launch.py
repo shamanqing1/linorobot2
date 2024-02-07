@@ -26,7 +26,7 @@ from launch_ros.descriptions import ComposableNode
 
 def generate_launch_description():
     laser_sensor_name = os.getenv('LINOROBOT2_LASER_SENSOR', '')
-    depth_sensor_name = os.getenv('LINOROBOT2_DEPTH_SENSOR', '')
+    depth_sensor_name = os.getenv('LINOROBOT2_DEPTH_SENSOR', 'dabai_dcl')
     
     fake_laser_config_path = PathJoinSubstitution(
         [FindPackageShare('linorobot2_bringup'), 'config', 'fake_laser.yaml']
@@ -46,6 +46,8 @@ def generate_launch_description():
         'oakd': ['/right/image_rect', '/right/camera_info'],
         'oakdlite': ['/right/image_rect', '/right/camera_info'],
         'oakdpro': ['/right/image_rect', '/right/camera_info'],
+        'gemini2': ['/camera/depth/image_raw', '/camera/depth/camera_info'],
+        'dabai_dcl': ['/camera/depth/image_raw', '/camera/depth/camera_info'],
     }
 
     laser_launch_path = PathJoinSubstitution(

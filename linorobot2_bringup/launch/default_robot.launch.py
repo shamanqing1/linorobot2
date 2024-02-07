@@ -42,9 +42,13 @@ def generate_launch_description():
             name='micro_ros_agent',
             output='screen',
             arguments=['serial', '--dev', LaunchConfiguration("base_serial_port")]
+            # arguments=['udp4', '--port', '8888']
         ),
         IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(description_launch_path)
+            PythonLaunchDescriptionSource(description_launch_path),
+            launch_arguments={
+                'rviz': 'false'
+            }.items()   
         ),
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(sensors_launch_path),

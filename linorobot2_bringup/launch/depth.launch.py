@@ -27,6 +27,7 @@ def generate_launch_description():
     zed_common_config_path = PathJoinSubstitution(
         [FindPackageShare('linorobot2_bringup'), 'config', 'zed_common.yaml']
     )
+    orbbec_sensors = ['gemini2', 'dabai_dcl']
 
     oakd_sensors = ['oakd', 'oakdlite', 'oakdpro']
     to_oakd_vars = {
@@ -40,7 +41,10 @@ def generate_launch_description():
             default_value='realsense',
             description='Sensor to launch'
         ),
-
+        DeclareLaunchArgument(
+            name='launch',
+            default_value=[LaunchConfiguration('sensor'), '.launch.py']
+        ),
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(PathJoinSubstitution(
                 [FindPackageShare('realsense2_camera'), 'launch', 'rs_launch.py']
@@ -75,6 +79,19 @@ def generate_launch_description():
             condition=IfCondition(PythonExpression(['"', LaunchConfiguration('sensor'), '" in "', str(oakd_sensors), '"'])),
             launch_arguments={
                 'camera_model': to_oakd_vars.get(LaunchConfiguration('sensor'), None),              
+            }.items()   
+        ),
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(PathJoinSubstitution(
+                [FindPackageShare('orbbec_camera'), 'launch', LaunchConfiguration('launch')]
+            )),
+            condition=IfCondition(PythonExpression(['"', LaunchConfiguration('sensor'), '" in "', str(orbbec_sensors), '"'])),
+            launch_arguments={
+                'depth_registration' : 'true',
+                'enable_point_cloud' : 'false',
+                'enable_colored_point_cloud' : 'false',
+                'enable_colored_point_cloud' : 'false',
+                'enable_ir' : 'false',
             }.items()   
         ),
     ])
